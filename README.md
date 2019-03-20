@@ -1,0 +1,2 @@
+# schafkopf
+Schafkopf in python
