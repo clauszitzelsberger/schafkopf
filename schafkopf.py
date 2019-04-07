@@ -34,5 +34,5 @@ if __name__ == '__main__':
     schafkopf = Schafkopf()
     for _ in range(N_EPISODES):
         schafkopf.reset(dealer_id)
-        dealer_id += 1
+        dealer_id = (dealer_id + 1) % 4
         
