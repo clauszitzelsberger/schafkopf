@@ -9,5 +9,8 @@ class State():
         - scores
         - etc.
     """
-    def __init__(dealer_id):
+    def __init__(self, dealer_id):
         self.dealer_id = dealer_id
+        self.game = None
+        self.game_player = None
+        

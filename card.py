@@ -24,3 +24,8 @@ class Card():
                 ]
         
         self.number = number[id%8]
+        
+        if self.number in ['unter', 'ober']:
+            self.not_ober_unter = False
+        else:
+            self.not_ober_unter = True
