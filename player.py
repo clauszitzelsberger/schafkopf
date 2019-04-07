@@ -5,4 +5,7 @@ class Player():
         self.name = name
         self.credit = 0
         self.cards = None
+        
+    def get_possible_games(self):
+        pass
     
