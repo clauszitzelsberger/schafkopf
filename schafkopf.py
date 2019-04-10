@@ -5,8 +5,11 @@ from card import Card
 from player import Player
 from general_state import State
 
+
 class Schafkopf():
     def __init__(self):
+        self.game_number = 0
+        
         # initialize cards and players
         self.cards = []
         for i in range(32):
@@ -14,10 +17,14 @@ class Schafkopf():
             
         players = ['Claus', 'Sepp', 'Hans', 'Kreszenz']
         self.players = []
-        for player in players:
-            self.players.append(Player(name=player))
+        for i in range(len(players)):
+            self.players.append(Player(id=i, name=players[i]))
             
-    def reset(self, dealer_id):
+    def reset(self):
+        # Define dealer
+        self.game_number += 1
+        dealer_id = self.game_number % 4
+        
         # Shuffle and deal cards
         random.shuffle(self.cards)
         for i in range(len(self.players)):
@@ -33,6 +40,5 @@ if __name__ == '__main__':
     dealer_id=0
     schafkopf = Schafkopf()
     for _ in range(N_EPISODES):
-        schafkopf.reset(dealer_id)
-        dealer_id = (dealer_id + 1) % 4
+        schafkopf.reset()
         

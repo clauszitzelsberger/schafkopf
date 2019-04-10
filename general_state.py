@@ -13,4 +13,9 @@ class State():
         self.dealer_id = dealer_id
         self.game = None
         self.game_player = None
+        self.played_cards = None
+        
+    def set_game(self, player, game):
+        self.game_player = player
+        self.game = game
         

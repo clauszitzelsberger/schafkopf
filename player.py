@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 class Player():
-    def __init__(self, name):
+    def __init__(self, id, name):
         self.name = name
         self.credit = 0
         self.cards = None
-        
+    """
     def get_possible_games(self, state):
         #game_player = state_overall.state_overall['game_player']
         #game =  state_overall.state_overall['game']
         #dealed_cards = self.state_player['dealed_cards']
-        possible_games = self.rules.games
+        #possible_games = self.rules.games
 
         # No player defined: one is free to choose a game
         if state.game_player == None:
@@ -33,9 +33,9 @@ class Player():
         else:
             possible_games = []
 
-return possible_games
+        return possible_games"""
     
-    def describe_cards(self):
+    def __describe_cards(self):
         colors = []
         for card in self.cards:
             if card.not_ober_unter:
