@@ -28,7 +28,7 @@ class Schafkopf():
         # Shuffle and deal cards
         random.shuffle(self.cards)
         for i in range(len(self.players)):
-            self.players[i].cards = self.cards[i*8:(i+1)*8]
+            self.players[i].set_cards(self.cards[i*8:(i+1)*8])
         self.state = State(dealer_id)
     
     def step(self):
