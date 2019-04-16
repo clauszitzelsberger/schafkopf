@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
 
+number = ['siebener',
+          'achter',
+          'neuner',
+          'zehner',
+          'unter',
+          'ober',
+          'koenig',
+          'sau']
+
 class Card():
     def __init__(self, id):
         self.id = id
@@ -12,17 +21,6 @@ class Card():
         else:
             self.color = 'schellen'
             
-        number = [
-                'siebener',
-                'achter',
-                'neuner',
-                'zehner',
-                'unter',
-                'ober',
-                'koenig',
-                'sau'
-                ]
-        
         self.number = number[id%8]
         
         if self.number in ['unter', 'ober']:

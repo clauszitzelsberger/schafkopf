@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+
+
 class Player():
     def __init__(self, id, name):
         self.name = name
@@ -11,30 +13,10 @@ class Player():
         self.cards = cards
         self.remaining_cards = cards
         
-    def get_cards(self, color=None, number=None, trumps=None, state=None):
-        assert type(color)==list or color is None, 'Color arg must be list type or None'
-        assert type(number)==list or number is None, 'Number arg must be list type or None'
-        assert type(trumps)==bool or trumps is None, 'Trumps arg must be bool type or None'
-        if type(trumps)==bool:
-            assert state is not None, 'State needs to be defined'
+    
             
             
-        
-        
-        if trumps:
-            assert state is not None, 'State needs to be defined if trumps are requested'
-        if color is not None:
-            assert type(color)==list, 'Color arg must be list type'
-        if number is not None:
-            assert type(number)==list, 'Number arg must be list tpye'
-        
-        cards = []
-        if trumps:
-            pass
-        else:
-            for card in self.remaining_cards:
-                if (card.color in color)==True and (card.number in number)==True:
-                    cards.append(card)
+    
                     
     """
     def get_possible_games(self, state):
