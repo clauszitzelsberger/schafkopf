@@ -32,13 +32,13 @@ class Helper():
     @staticmethod        
     def get_trumps(cards, state):
         
-        card_colors, card_numbers = Herper.__card_lists(cards)
+        card_colors, card_numbers = Helper.__card_lists(cards)
         
-        if state.game is None or state.game.kind == 'Sauspiel':
+        if state.game is None or state.game.kind == 'sauspiel':
             card_ids = [i for i in range(len(cards)) 
                 if card_colors[i]=='herz' 
                 or card_numbers[i] in ['unter', 'ober']]
-        elif state.game.kind == 'Solo':
+        elif state.game.kind == 'solo':
             card_ids = [i for i in range(len(cards))
                 if card_colors[i]==state.game.color
                 or card_numbers[i] in ['unter', 'ober']]

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
+from helper import Helper
+from game import Game_static
 
 class Player():
     def __init__(self, id, name):
@@ -13,46 +14,47 @@ class Player():
         self.cards = cards
         self.remaining_cards = cards
         
-    
-            
-            
-    
-                    
-    """
     def get_possible_games(self, state):
-        #game_player = state_overall.state_overall['game_player']
-        #game =  state_overall.state_overall['game']
-        #dealed_cards = self.state_player['dealed_cards']
-        #possible_games = self.rules.games
-
-        # No player defined: one is free to choose a game
-        if state.game_player == None:
+        """
+        Get all games which a player can play based on his cards and the game 
+        which has been already selected by another player and which may be
+        overruled"""
+        
+        sauspiel, wenz, solo = False, False, False
+        
+        # Evaluate if there is already a potential game player
+        # and if he/she can be overruled with a higher-order game
+        if state.game is None:
+            sauspiel = True
+            wenz = True
+            solo = True
+        elif state.game.kind=='sauspiel':
+            wenz = True
+            solo = True
+        elif state.game.kind=='wenz':
+            solo = True
             
-            
-            # iterate over every color (except herz)
-            for color in [0,1,3]:
-                if len(self.\
-                    rules.\
-                    get_specific_cards2(cards_list=dealed_cards,
-                    card=[color, None],
-                    game=[color, 0]))==0\
-                    or [color,7] in dealed_cards:
-                    possible_games.remove([color, 0])
-        elif game[1] == 0: #someone already selected a sauspiel
-            for color in [0,1,3]:
-                possible_games.remove([color, 0])
-        elif game[1] == 2: #someone already selected a wenz
-            for color in [0,1,3]:
-                possible_games.remove([color, 0])
-            possible_games.remove([None, 2])
-        else:
-            possible_games = []
+        possible_games = []
 
+        if sauspiel:
+            for sauspiel in Game_static.sauspiele:
+                if len(Helper.get_cards(self.cards, color=[sauspiel[0]], 
+                                        trumps=False, state=state))>0:
+                    possible_games.append(sauspiel)
+        
+        if wenz:
+            possible_games.append(Game_static.wenz)
+        
+        if solo:
+            possible_games.extend(Game_static.soli)
+            
         return possible_games
     
-    def __card_colors(self):
-        colors = []
-        for card in self.cards:
-            if card.not_ober_unter:
-                colors.append(card.color)
-        return set(colors)"""
+    def get_possible_cards(self, state):
+        """
+        Get all cards which a player can play based on his remaining cards, the cards
+        that have been already played by other players in this trick, and the game
+        which is being played"""
+                    
+    def play_card(self, card):
+        pass
