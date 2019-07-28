@@ -2,7 +2,7 @@
 
 import numpy as np
 
-number = ['siebener',
+numbers = ['siebener',
           'achter',
           'neuner',
           'zehner',
@@ -11,7 +11,9 @@ number = ['siebener',
           'koenig',
           'sau']
 
-value = [0, 0, 0, 10, 2, 3, 4, 11]
+values = [0, 0, 0, 10, 2, 3, 4, 11]
+
+colors = ['eichel', 'gras', 'herz', 'schellen']
 
 def initialize(id):
     # Id and one hot encoded id
@@ -20,17 +22,17 @@ def initialize(id):
     
     # Color and number
     if id < 8:
-        color = 'eichel'
+        color = colors[0]
     elif id < 16:
-        color = 'gras'
+        color = colors[1]
     elif id < 24:
-        color = 'herz'
+        color = colors[2]
     else:
-        color = 'schellen'
-    number_card = number[id%8]
+        color = colors[3]
+    number = numbers[id%8]
     
     # Value of card
-    value_card = value[id%8]
+    value = values[id%8]
     
     # Display name
     name = (color + ' ' + number)
@@ -44,8 +46,8 @@ def initialize(id):
     card = {'id': id,
             'one_hot': one_hot,
             'color': color,
-            'number': number_card,
-            'value': value_card,
+            'number': number,
+            'value': value,
             'name': name,
             'not_ober_unter': not_ober_unter
             }

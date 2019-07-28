@@ -2,13 +2,13 @@
 import unittest
 import numpy as np
 from helper import Helper
-from card import Card
+import card
 
 class TestHelper(unittest.TestCase):
     def test_get_cards(self):
         cards = []
         for i in range(32):
-            cards.append(Card(id=i))
+            cards.append(card.initialize(id=i))
         
         self.assertEqual(Helper.get_cards(cards), 
                          list(np.arange(32)))

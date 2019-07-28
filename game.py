@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+NoneType = type(None)
+
 rewards = {'sauspiel': 20,
            'solo': 50,
            'wenz': 50}
@@ -13,8 +15,8 @@ soli = games[3:7]
 wenz = games[7]
 
 def initialize(color, kind):
-    assert type(color)==str or color is None, 'color argument must be string or None type'
-    assert type(kind)==str, 'kind argument must be string type'
+    assert isinstance(color, (str, NoneType)), 'color argument must be string or None type'
+    assert isinstance(kind, str), 'kind argument must be string type'
     assert [color, kind] in games, 'Invalid game defined: ' + color + ' ' + kind
     
     game = {'kind': kind,

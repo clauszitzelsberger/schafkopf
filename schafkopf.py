@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
 
-from card import Card
+import card
 from player import Player
 from general_state import State
 
@@ -12,7 +12,7 @@ class Schafkopf():
         # initialize cards and players
         self.cards = []
         for i in range(32):
-            self.cards.append(Card(id=i))
+            self.cards.append(card.initialize(id=i))
             
         players = ['Claus', 'Sepp', 'Hans', 'Kreszenz']
         self.players = []
@@ -37,7 +37,6 @@ class Schafkopf():
     def step_card(self, player_id, card):
         """Player plays a card"""
         self.players[player_id].play_card(card)
-        
     
     
 if __name__ == '__main__':
@@ -56,4 +55,8 @@ if __name__ == '__main__':
                         None if sel_game_type=='None' else sel_game_type]
             schafkopf.step_game(i, sel_game)
             print('\n')
-        
+        for j in range(1, 9):
+            for i in range(len(schafkopf.players)):
+                poss_cards = schafkopf.players[i].get_possible_cards(schafkopf.state)
+                print(poss_cards)
+                sel_

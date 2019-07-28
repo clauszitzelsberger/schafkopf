@@ -63,7 +63,7 @@ class Helper():
     @staticmethod    
     def __card_lists(cards):
         """Returns two lists, one for color, one for number given a cards list"""
-        return [card.color for card in cards], [card.number for card in cards]
+        return [card['color'] for card in cards], [card['number'] for card in cards]
     
     @staticmethod
     def __intersection(lst1, lst2): 
