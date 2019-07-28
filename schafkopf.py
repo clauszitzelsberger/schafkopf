@@ -30,9 +30,9 @@ class Schafkopf():
             self.players[i].set_cards(self.cards[i*8:(i+1)*8])
         self.state = State(dealer_id)
     
-    def step_game(self, game_player_id, game):
+    def step_game(self, game_player_id, game=[None, None]):
         """Players select a game"""
-        State.set_game(game_player_id, game)
+        self.state.set_game(game_player_id, game)
     
     def step_card(self, player_id, card):
         """Player plays a card"""
@@ -50,5 +50,10 @@ if __name__ == '__main__':
             print(i)
             print([card.name for card in schafkopf.players[i].cards])
             print(poss_games)
+            sel_game_color = input('Select game color: ')
+            sel_game_type = input('Select game type: ')
+            sel_game = [None if sel_game_color=='None' else sel_game_color, 
+                        None if sel_game_type=='None' else sel_game_type]
+            schafkopf.step_game(i, sel_game)
             print('\n')
         

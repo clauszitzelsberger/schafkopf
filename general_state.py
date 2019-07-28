@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from game import Game
+NoneType = type(None)
 
 class State():
     """
@@ -17,10 +18,14 @@ class State():
         self.game_player_id = None
         self.played_cards = None
         
-    def set_game(self, player_id, game):
-        assert type(player_id)==int, 'player_id argument must be int type'
-        assert type(game)==list and len(game)==2 and type(game[0])==type(game[1])==str, \
-            'game argument must be a list of two strings'
-        self.game_player_id = player_id
-        self.game = Game(game[0], game[1])
+    def set_game(self, player_id, game=[None, None]):
         
+        if game!=[None, None]:
+            assert isinstance(player_id, int), 'player_id argument must be int type'
+            assert isinstance(game, list)
+            assert len(game)==2
+            assert isinstance(game[0], (str, NoneType))
+            assert isinstance(game[1], str)
+            self.game_player_id = player_id
+            self.game = Game(game[0], game[1])
+    
