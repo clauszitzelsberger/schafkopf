@@ -13,33 +13,40 @@ number = ['siebener',
 
 value = [0, 0, 0, 10, 2, 3, 4, 11]
 
-class Card():
-    def __init__(self, id):
+def initialize(id):
+    # Id and one hot encoded id
+    one_hot = np.zeros(32)
+    one_hot[id] = 1
+    
+    # Color and number
+    if id < 8:
+        color = 'eichel'
+    elif id < 16:
+        color = 'gras'
+    elif id < 24:
+        color = 'herz'
+    else:
+        color = 'schellen'
+    number_card = number[id%8]
+    
+    # Value of card
+    value_card = value[id%8]
+    
+    # Display name
+    name = (color + ' ' + number)
+    
+    # Distinguish betwenn Unter+Ober and rest of cards
+    if number in ['unter', 'ober']:
+        not_ober_unter = False
+    else:
+        not_ober_unter = True
         
-        # Id and one hot encoded id
-        self.id = id
-        self.one_hot = np.zeros(32)
-        self.one_hot[id] = 1
-        
-        # Color and number
-        if id < 8:
-            self.color = 'eichel'
-        elif id < 16:
-            self.color = 'gras'
-        elif id < 24:
-            self.color = 'herz'
-        else:
-            self.color = 'schellen'
-        self.number = number[id%8]
-        
-        # Value of card
-        self.value = value[id%8]
-        
-        # Display name
-        self.name = (self.color + ' ' + self.number)
-        
-        # Distinguish betwenn Unter+Ober and rest of cards
-        if self.number in ['unter', 'ober']:
-            self.not_ober_unter = False
-        else:
-            self.not_ober_unter = True
+    card = {'id': id,
+            'one_hot': one_hot,
+            'color': color,
+            'number': number_card,
+            'value': value_card,
+            'name': name,
+            'not_ober_unter': not_ober_unter
+            }
+    return card
