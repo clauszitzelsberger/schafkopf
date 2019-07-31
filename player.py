@@ -13,7 +13,9 @@ class Player():
         self.remaining_cards = None
         self.davonlaufen_possible = False
         self.davongelaufen = False
+        self.rufsau = None
         self.possible_cards = []
+        self.possible_games = []
         
     def set_cards(self, cards):
         self.cards = cards
@@ -39,21 +41,21 @@ class Player():
         elif state.game.kind=='wenz':
             solo = True
             
-        possible_games = []
+        self.possible_games = []
 
         if sauspiel:
             for sauspiel in game.sauspiele:
                 if len(Helper.get_cards(self.cards, color=[sauspiel[0]], 
                                         trumps=False, state=state))>0:
-                    possible_games.append(sauspiel)
+                    self.possible_games.append(sauspiel)
         
         if wenz:
-            possible_games.append(game.wenz)
+            self.possible_games.append(game.wenz)
         
         if solo:
-            possible_games.extend(game.soli)
-            
-        return possible_games
+            self.possible_games.extend(game.cards)
+                                  
+        return self.possible_games
     
     def get_possible_cards(self, state):
         """
@@ -94,6 +96,7 @@ class Player():
                                             color=[rufsau[0]],
                                             trumps=False))>=4:
                         self.davonlaufen_possible = True
+                        self.rufsau = rufsau
                         self.possible_cards = self.remaining_cards
                     # Player has less then 4 cards with rufsau's color
                     # Can play either rufsau or any other card with a color unlike rufsau
@@ -180,11 +183,17 @@ class Player():
                 
         return self.possible_cards
             
-                    
+    def select_game(self, game):
+        """Checks selected game"""
+        assert game in self.possible_games
+
+                
     def play_card(self, card):
-        """Removes card from remaining_cards and puts card in played_cards at 
-        States"""
-        if self.davonlaufen_possible:
-            # if card = rufsau:
-            # self.davongelaufen=True
+        """Checks selected card and removes card from remaining_cards"""
+        assert card in self.possible_cards
+        
+        if self.davonlaufen_possible and card!=self.rufsau:
+            self.davongelaufen=True
+        
+        self.remaining_cards.remove(card)
         self.possible_cards = None

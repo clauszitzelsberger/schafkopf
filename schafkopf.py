@@ -32,11 +32,14 @@ class Schafkopf():
     
     def step_game(self, game_player_id, game=[None, None]):
         """Players select a game"""
+        self.players[game_player_id].select_game(game)
         self.state.set_game(game_player_id, game)
     
     def step_card(self, player_id, card):
         """Player plays a card"""
         self.players[player_id].play_card(card)
+        self.state.set_card(player_id, card)
+        
     
     
 if __name__ == '__main__':
@@ -59,4 +62,6 @@ if __name__ == '__main__':
             for i in range(len(schafkopf.players)):
                 poss_cards = schafkopf.players[i].get_possible_cards(schafkopf.state)
                 print(poss_cards)
-                sel_
+                sel_card_id = input('Select card id: ')
+                sel_card = poss_cards[int(sel_card_id)]
+                schafkopf.step_card(i, sel_card)

@@ -18,9 +18,9 @@ class State():
         self.first_player = (dealer_id + 1) % 4
         self.game = None
         self.game_player_id = None
-        self.played_cards = None
+        self.played_cards = [[None]*4]*8
         self.scores = [0, 0, 0, 0]
-        self.trick = 0
+        self.trick = 1
         
     def set_game(self, player_id, selected_game=[None, None]):
         """Sets game and respective player id"""
@@ -32,9 +32,9 @@ class State():
             self.game_player_id = player_id
             self.game = game.initialize(selected_game[0], selected_game[1])
             
-    def play_card(self, player_id, card):
+    def set_card(self, player_id, card):
         """Puts card into played_cards"""
-        pass
+        self.played_cards[self.trick][player_id] = card
             
     def update_scores(self, additional_scores=[0, 0, 0, 0]):
         """Update scores of each player"""
