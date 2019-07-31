@@ -50,13 +50,14 @@ if __name__ == '__main__':
         for i in range(len(schafkopf.players)):
             poss_games = schafkopf.players[i].get_possible_games(schafkopf.state)
             print(i)
-            print([card.name for card in schafkopf.players[i].cards])
+            print([card['name'] for card in schafkopf.players[i].cards])
             print(poss_games)
-            sel_game_color = input('Select game color: ')
-            sel_game_type = input('Select game type: ')
-            sel_game = [None if sel_game_color=='None' else sel_game_color, 
-                        None if sel_game_type=='None' else sel_game_type]
-            schafkopf.step_game(i, sel_game)
+            if len(poss_games)>0:
+                sel_game_color = input('Select game color: ')
+                sel_game_type = input('Select game type: ')
+                sel_game = [None if sel_game_color=='None' else sel_game_color, 
+                            None if sel_game_type=='None' else sel_game_type]
+                schafkopf.step_game(i, sel_game)
             print('\n')
         for j in range(1, 9):
             for i in range(len(schafkopf.players)):

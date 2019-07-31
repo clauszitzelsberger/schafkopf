@@ -35,10 +35,10 @@ class Player():
             sauspiel = True
             wenz = True
             solo = True
-        elif state.game.kind=='sauspiel':
+        elif state.game['kind']=='sauspiel':
             wenz = True
             solo = True
-        elif state.game.kind=='wenz':
+        elif state.game['kind']=='wenz':
             solo = True
             
         self.possible_games = []
@@ -53,7 +53,7 @@ class Player():
             self.possible_games.append(game.wenz)
         
         if solo:
-            self.possible_games.extend(game.cards)
+            self.possible_games.extend(game.soli)
                                   
         return self.possible_games
     
@@ -65,7 +65,7 @@ class Player():
         
         lead_card = state.played_cards[state.trick][state.first_player]
         
-        if state.game.kind == 'sauspiel':
+        if state.game['kind'] == 'sauspiel':
             
             rufsau = {'color': state.game.color,
                       'number': 'sau'}
