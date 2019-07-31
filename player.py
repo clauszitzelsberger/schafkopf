@@ -2,7 +2,7 @@
 
 from helper import Helper
 import game
-import card
+#import card
 
 class Player():
     def __init__(self, id, name):
@@ -12,7 +12,8 @@ class Player():
         self.cards = None
         self.remaining_cards = None
         self.davonlaufen_possible = False
-        self.davonlaufen = False
+        self.davongelaufen = False
+        self.possible_cards = []
         
     def set_cards(self, cards):
         self.cards = cards
@@ -66,37 +67,42 @@ class Player():
             
             rufsau = {'color': state.game.color,
                       'number': 'sau'}
+            
+            # Check if player has rufsau
+            ids_list = Helper.get_cards(self.remaining_cards, 
+                                           color=[rufsau['color']], 
+                                           number=[rufsau['number']])
+            
+            if len(ids_list)==1:
+                has_rufsau = True
+                rufsau = self.remaining_cards[ids_list[0]]
         
             # Player is first one to play a card in this trick
-            if state.first_player == self.id:
+            if state.first_player==self.id:
                 
                 assert lead_card==[None, None]
                 
                 # Check if player has rufsau
-                ids_list = Helper.get_cards(self.remaining_cards, 
-                                               color=[rufsau['color']], 
-                                               number=[rufsau['number']])
-                if len(ids_list)==0:
-                    return self.remaining_card
+                if not has_rufsau:
+                    self.possible_cards = self.remaining_cards
                 
                 # Player has rufsau
                 else:
-                    rufsau = self.remaining_cards[ids_list[0]]
                     # Player has more than 3 cards with rufsau's color
                     # davonlaufen is possible
                     if len(Helper.get_cards(self.remaining_cards,
                                             color=[rufsau[0]],
                                             trumps=False))>=4:
                         self.davonlaufen_possible = True
-                        return self.remaining_cards
+                        self.possible_cards = self.remaining_cards
                     # Player has less then 4 cards with rufsau's color
                     # Can play either rufsau or any other card with a color unlike rufsau
                     else:
                         colors_unlike_rufsau = [c for c in self.remaining_cards.colors if c!=rufsau['color'] ]
                         possible_cards = Helper.get_cards(self.remaining_cards,
                                                           color=colors_unlike_rufsau)
-                        possible_cards.appen(rufsau)
-                        return possible_cards
+                        possible_cards.append(rufsau)
+                        self.possible_cards = possible_cards
              
             # Player is not the first one in this trick
             else:
@@ -108,13 +114,77 @@ class Player():
                     ids_list = Helper.get_trumps(self.remaining_cards, state)
                     
                     if ids_list>0:
-                        return [self.remaining_cards[i] for i in ids_list]
+                        self.possible_cards = [self.remaining_cards[i] for i in ids_list]
                     
+                    # No trump in remaining cards
+                    else:
+                        if self.davongelaufen:
+                            self.possible_cards = self.remaining_cards
+                        else:
+                            if has_rufsau and state.trick==8:
+                                self.possible_cards = self.remaining_cards.copy
+                                self.possible_cards.remove(rufsau)
+                            else:
+                                self.possible_cards = self.remaining_cards
+                                
+                # Lead card has rufsaus's color and player has rufsau and not davongelaufen
+                elif ((lead_card['color']==state.game['color']) and 
+                      has_rufsau and 
+                      (not self.davongelaufen)):
+                    self.possible_cards = [rufsau]
                 
-            
+                # Other cases
+                else:
+                    ids_list = Helper.get_cards(self.remaining_cards, color=lead_card['color'])
+                    
+                    # Player has lead cards color
+                    if len(ids_list)>0:
+                        self.possible_cards = [self.remaining_cards[i] for i in ids_list]
+                    else:
+                        if self.davongelaufen:
+                            self.possible_cards = self.remaining_cards
+                        else:
+                            if has_rufsau and state.trick==8:
+                                self.possible_cards = self.remaining_cards.copy
+                                self.possible_cards.remove(rufsau)
+                            else:
+                                self.possible_cards = self.remaining_cards
+                                
+        # Wenz or Solo
+        else:
+            # Player is first one to play a card in this trick
+            if state.first_player==self.id:
+                self.possible_cards = self.remaining_cards
+            else:
+                # Lead card is a trump    
+                if len(Helper.get_trumps([lead_card], state))>0:
+                    # Player has at least on trump in remaining cards
+                    ids_list = Helper.get_trumps(self.remaining_cards, state)
+                    
+                    if ids_list>0:
+                        self.possible_cards = [self.remaining_cards[i] for i in ids_list]
+                    
+                    # No trump in remaining cards
+                    else:
+                        self.possible_cards = self.remaining_cards
+                        
+                # Lead card is a color
+                else:
+                    ids_list = Helper.get_cards(self.remaining_cards, color=lead_card['color'])
+                    
+                    # Player has lead cards color
+                    if len(ids_list)>0:
+                        self.possible_cards = [self.remaining_cards[i] for i in ids_list]
+                    else:
+                        self.possible_cards = self.remaining_cards
+                
+        return self.possible_cards
             
                     
     def play_card(self, card):
         """Removes card from remaining_cards and puts card in played_cards at 
         States"""
-        pass
+        if self.davonlaufen_possible:
+            # if card = rufsau:
+            # self.davongelaufen=True
+        self.possible_cards = None
