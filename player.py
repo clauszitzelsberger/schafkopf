@@ -164,7 +164,7 @@ class Player():
                     # Player has at least on trump in remaining cards
                     ids_list = Helper.get_trumps(self.remaining_cards, state)
                     
-                    if ids_list>0:
+                    if len(ids_list)>0:
                         self.possible_cards = [self.remaining_cards[i] for i in ids_list]
                     
                     # No trump in remaining cards
@@ -190,10 +190,10 @@ class Player():
                 
     def play_card(self, card):
         """Checks selected card and removes card from remaining_cards"""
-        assert card in self.possible_cards
+        assert card in self.possible_cards #not required, because assertion already in schafkopf.py
         
         if self.davonlaufen_possible and card!=self.rufsau:
             self.davongelaufen=True
         
         self.remaining_cards.remove(card)
-        self.possible_cards = None
+        self.possible_cards = []

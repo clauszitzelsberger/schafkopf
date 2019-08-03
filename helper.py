@@ -47,13 +47,13 @@ class Helper():
         
         card_colors, card_numbers = Helper.__card_lists(cards)
         
-        if state.game is None or state.game.kind == 'sauspiel':
+        if state.game is None or state.game['kind'] == 'sauspiel':
             card_ids = [i for i in range(len(cards)) 
                 if card_colors[i]=='herz' 
                 or card_numbers[i] in ['unter', 'ober']]
-        elif state.game.kind == 'solo':
+        elif state.game['kind'] == 'solo':
             card_ids = [i for i in range(len(cards))
-                if card_colors[i]==state.game.color
+                if card_colors[i]==state.game['color']
                 or card_numbers[i] in ['unter', 'ober']]
         else:
             card_ids = [i for i in range(len(cards))

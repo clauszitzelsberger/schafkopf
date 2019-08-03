@@ -5,6 +5,7 @@ import card
 from player import Player
 from general_state import State
 
+
 class Schafkopf():
     def __init__(self):
         self.game_number = 0
@@ -55,28 +56,30 @@ if __name__ == '__main__':
     schafkopf = Schafkopf()
     for e in range(1, N_EPISODES+1):
         schafkopf.reset()
-        order = schafkopf.set_order_of_players(schafkopf.state.dealer_id + 1)
-        for i in range(len(schafkopf.players)):
+        first_player = (schafkopf.state.dealer_id + 1) % 4
+        players_order = schafkopf.set_order_of_players(first_player)
+        for i in players_order:
             poss_games = schafkopf.players[i].get_possible_games(schafkopf.state)
             print(i)
             print([card['name'] for card in schafkopf.players[i].cards])
             print(poss_games)
             if len(poss_games)>0:
-                sel_game_color = input('Select game color: ')
-                sel_game_type = input('Select game type: ')
+                sel_game_color = 'schellen'#input('Select game color: ')
+                sel_game_type = 'solo'#input('Select game type: ')
                 sel_game = [None if sel_game_color=='None' else sel_game_color, 
                             None if sel_game_type=='None' else sel_game_type]
                 schafkopf.step_game(i, sel_game)
             print('\n')
         
-        first_player = (schafkopf.state.dealer_id + 1) % 4
         for j in range(1, 9):
-            order = schafkopf.set_order_of_players(first_player)
-            for i in range(len(schafkopf.players)):
+            players_order = schafkopf.set_order_of_players(first_player)
+            for i in players_order:
                 poss_cards = schafkopf.players[i].get_possible_cards(schafkopf.state)
                 print(poss_cards)
-                sel_card_id = input('Select card id: ')
-                sel_card = poss_cards[int(sel_card_id)]
+                sel_card_id = int(input('Select card id: '))
+                sel_card = next((card for card in poss_cards if card['id'] == sel_card_id), None)
+                assert sel_card is not None, 'Selected card not part of possbile cards list'
                 schafkopf.step_card(i, sel_card)
-                
+             
+            # Update first player   
             #first_player=
