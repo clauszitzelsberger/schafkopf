@@ -173,7 +173,7 @@ class Player():
                         
                 # Lead card is a color
                 else:
-                    ids_list = Helper.get_cards(self.remaining_cards, color=lead_card['color'])
+                    ids_list = Helper.get_cards(self.remaining_cards, color=[lead_card['color']])
                     
                     # Player has lead cards color
                     if len(ids_list)>0:
@@ -192,7 +192,7 @@ class Player():
         """Checks selected card and removes card from remaining_cards"""
         assert card in self.possible_cards #not required, because assertion already in schafkopf.py
         
-        if self.davonlaufen_possible and card!=self.rufsau:
+        if self.davonlaufen_possible and card!=self.rufsau: #TODO: self.rufsau not initialized
             self.davongelaufen=True
         
         self.remaining_cards.remove(card)
