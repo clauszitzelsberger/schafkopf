@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from helper import Helper
 import game
 #import card
 
@@ -45,8 +44,8 @@ class Player():
 
         if sauspiel:
             for sauspiel in game.sauspiele:
-                if len(Helper.get_cards(self.cards, color=[sauspiel[0]], 
-                                        trumps=False, state=state))>0:
+                if len(state.get_cards(self.cards, color=[sauspiel[0]], 
+                                        trumps=False))>0:
                     self.possible_games.append(sauspiel)
         
         if wenz:
@@ -71,9 +70,9 @@ class Player():
                       'number': 'sau'}
             
             # Check if player has rufsau
-            ids_list = Helper.get_cards(self.remaining_cards, 
-                                           color=[rufsau['color']], 
-                                           number=[rufsau['number']])
+            ids_list = state.get_cards(self.remaining_cards, 
+                                       color=[rufsau['color']], 
+                                       number=[rufsau['number']])
             
             if len(ids_list)==1:
                 has_rufsau = True
@@ -92,7 +91,7 @@ class Player():
                 else:
                     # Player has more than 3 cards with rufsau's color
                     # davonlaufen is possible
-                    if len(Helper.get_cards(self.remaining_cards,
+                    if len(state.get_cards(self.remaining_cards,
                                             color=[rufsau[0]],
                                             trumps=False))>=4:
                         self.davonlaufen_possible = True
@@ -102,7 +101,7 @@ class Player():
                     # Can play either rufsau or any other card with a color unlike rufsau
                     else:
                         colors_unlike_rufsau = [c for c in self.remaining_cards.colors if c!=rufsau['color'] ]
-                        possible_cards = Helper.get_cards(self.remaining_cards,
+                        possible_cards = state.get_cards(self.remaining_cards,
                                                           color=colors_unlike_rufsau)
                         possible_cards.append(rufsau)
                         self.possible_cards = possible_cards
@@ -111,10 +110,10 @@ class Player():
             else:
                 
                 # Lead card is a trump
-                if len(Helper.get_trumps([lead_card], state))>0:
+                if len(state.get_trumps([lead_card], state))>0:
                     
                     # Player has at least on trump in remaining cards
-                    ids_list = Helper.get_trumps(self.remaining_cards, state)
+                    ids_list = state.get_trumps(self.remaining_cards)
                     
                     if ids_list>0:
                         self.possible_cards = [self.remaining_cards[i] for i in ids_list]
@@ -138,7 +137,7 @@ class Player():
                 
                 # Other cases
                 else:
-                    ids_list = Helper.get_cards(self.remaining_cards, color=lead_card['color'])
+                    ids_list = state.get_cards(self.remaining_cards, color=lead_card['color'])
                     
                     # Player has lead cards color
                     if len(ids_list)>0:
@@ -160,9 +159,9 @@ class Player():
                 self.possible_cards = self.remaining_cards
             else:
                 # Lead card is a trump    
-                if len(Helper.get_trumps([lead_card], state))>0:
+                if len(state.get_trumps([lead_card]))>0:
                     # Player has at least on trump in remaining cards
-                    ids_list = Helper.get_trumps(self.remaining_cards, state)
+                    ids_list = state.get_trumps(self.remaining_cards)
                     
                     if len(ids_list)>0:
                         self.possible_cards = [self.remaining_cards[i] for i in ids_list]
@@ -173,7 +172,7 @@ class Player():
                         
                 # Lead card is a color
                 else:
-                    ids_list = Helper.get_cards(self.remaining_cards, color=[lead_card['color']])
+                    ids_list = state.get_cards(self.remaining_cards, color=[lead_card['color']])
                     
                     # Player has lead cards color
                     if len(ids_list)>0:
