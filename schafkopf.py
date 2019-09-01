@@ -45,10 +45,8 @@ class Schafkopf():
     def set_order_of_players(first_player):
         """Returns a list of player ids in the correct order"""
         order = []
-        player_id = first_player % 4
         for i in range(4):
-            order.append(player_id % 4)
-            player_id += 1
+            order.append((first_player + i) % 4)
         return order
     
 if __name__ == '__main__':
@@ -58,6 +56,8 @@ if __name__ == '__main__':
         schafkopf.reset()
         first_player = (schafkopf.state.dealer_id + 1) % 4
         players_order = schafkopf.set_order_of_players(first_player)
+        
+        # Select game
         for i in players_order:
             poss_games = schafkopf.players[i].get_possible_games(schafkopf.state)
             print(i)
@@ -71,8 +71,11 @@ if __name__ == '__main__':
                 schafkopf.step_game(i, sel_game)
             print('\n')
         
+        # Iterate over 8 tricks
         for j in range(1, 9):
             players_order = schafkopf.set_order_of_players(first_player)
+            
+            # Select card
             for i in players_order:
                 poss_cards = schafkopf.players[i].get_possible_cards(schafkopf.state)
                 print(poss_cards)
@@ -81,5 +84,5 @@ if __name__ == '__main__':
                 assert sel_card is not None, 'Selected card not part of possbile cards list'
                 schafkopf.step_card(i, sel_card)
              
-            # Update first player   
+            # Who gets the trick?   
             #first_player=
