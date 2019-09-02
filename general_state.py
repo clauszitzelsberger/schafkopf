@@ -41,9 +41,29 @@ class State():
     def set_trick_results(self):
         """Returns winner of trick and updates first_player, scores and trick"""
 
-        if len(self.get_trumps(self.played_cards[self.trick])) > 0:
-            print('df')
-            
+        def highest_ober_or_unter(number='ober'):
+            """Returns winner of trick """
+            card_ids = self.get_cards(player_cards, number)
+            if len(card_ids):
+                cards = [player_cards[i] for i in ober_ids]
+
+                # id < 8 => eicherl, id < 16 => gras, etc...
+                return cards.index(min([i['id'] for i in cards]))
+
+        player_cards = self.played_cards[self.trick]
+        trump_ids = self.get_trumps(player_cards)
+
+        if len(trump_ids) > 0:
+
+            if self.game['kind'] != 'wenz':
+
+
+
+            ober_ids = self.get_cards(player_cards, number='ober')
+            if len(ober_ids) > 0:
+                ober = [player_cards[i] for i in ober_ids]
+                winner_trick = ober.index(min([i['id'] for i in ober]))
+
 
     def update_scores(self, additional_scores=[0, 0, 0, 0]):
         """Update scores of each player"""
@@ -51,11 +71,11 @@ class State():
         assert isinstance(additional_scores, list)
         self.scores += additional_scores
         assert sum(self.scores)<=max_score
-        
-        
+
+
     def get_cards(self, cards, color=None, number=None, trumps=None):
         """Returns subset of cards based on given criteria
-        
+
         params
         =====
             cards (list), remaining cards
@@ -68,33 +88,33 @@ class State():
         assert isinstance(color, (list, NoneType))
         assert isinstance(number, (list, NoneType))
         assert isinstance(trumps, (bool, NoneType))
-        
+
         card_colors, card_numbers = self.__card_lists(cards)
-        
+
         card_ids = [i for i in range(len(cards))]
-        
+
         if color is not None:
             card_ids = self.__intersection([i for i in range(len(cards)) if card_colors[i] in color], card_ids)
-            
+
         if number is not None:
             card_ids = self.__intersection([i for i in range(len(cards)) if card_numbers[i] in number], card_ids)
-        
+
         if trumps is not None:
             if trumps:
                 card_ids = self.__intersection(self.get_trumps(cards, state), card_ids)
             else:
                 card_ids = self.__difference(card_ids, self.get_trumps(cards, state))
-                
+
         return card_ids
-        
+
     def get_trumps(self, cards):
         """Returns subset of trumps in cards list based on state (selected game)"""
-        
+
         card_colors, card_numbers = self.__card_lists(cards)
-        
+
         if state.game is None or state.game['kind'] == 'sauspiel':
-            card_ids = [i for i in range(len(cards)) 
-                if card_colors[i]=='herz' 
+            card_ids = [i for i in range(len(cards))
+                if card_colors[i]=='herz'
                 or card_numbers[i] in ['unter', 'ober']]
         elif state.game['kind'] == 'solo':
             card_ids = [i for i in range(len(cards))
@@ -104,22 +124,22 @@ class State():
             card_ids = [i for i in range(len(cards))
                 if card_numbers[i]=='unter']
         return card_ids
-    
-    @staticmethod    
+
+    @staticmethod
     def __card_lists(cards):
         """Returns two lists, one for color, one for number given a cards list"""
         return [card['color'] for card in cards], [card['number'] for card in cards]
-    
+
     @staticmethod
-    def __intersection(lst1, lst2): 
+    def __intersection(lst1, lst2):
         """Returns all elements which are in both lists"""
-        return [i for i in lst1 if i in lst2] 
-    
+        return [i for i in lst1 if i in lst2]
+
     @staticmethod
     def __difference(lst1, lst2):
         """Returns theoretic difference of lst1 and lst2 (lst1 \ lst2)"""
         return [i for i in lst1 if i not in lst2]
-    
+
 if __name__ == '__main__':
     state = State(1)
     state.set_trick_results()

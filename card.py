@@ -19,7 +19,7 @@ def initialize(id):
     # Id and one hot encoded id
     one_hot = np.zeros(32)
     one_hot[id] = 1
-    
+
     # Color and number
     if id < 8:
         color = colors[0]
@@ -30,19 +30,19 @@ def initialize(id):
     else:
         color = colors[3]
     number = numbers[id%8]
-    
+
     # Value of card
     value = values[id%8]
-    
+
     # Display name
     name = (color + ' ' + number)
-    
+
     # Distinguish betwenn Unter+Ober and rest of cards
     if number in ['unter', 'ober']:
         not_ober_unter = False
     else:
         not_ober_unter = True
-        
+
     card = {'id': id,
             'one_hot': one_hot,
             'color': color,
