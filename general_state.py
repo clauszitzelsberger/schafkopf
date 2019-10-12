@@ -18,7 +18,7 @@ class State():
     def __init__(self, dealer_id):
         self.dealer_id = dealer_id
         self.first_player = (dealer_id + 1) % 4
-        self.game = None
+        self.game = {'kind': None, 'color': None}
         self.game_player_id = None
         self.played_cards = [[None]*4]*8
         self.scores = [0, 0, 0, 0]
@@ -56,6 +56,7 @@ class State():
         if len(trump_ids) > 0:
 
             if self.game['kind'] != 'wenz':
+                pass
 
 
 
@@ -101,9 +102,9 @@ class State():
 
         if trumps is not None:
             if trumps:
-                card_ids = self.__intersection(self.get_trumps(cards, state), card_ids)
+                card_ids = self.__intersection(self.get_trumps(cards), card_ids)
             else:
-                card_ids = self.__difference(card_ids, self.get_trumps(cards, state))
+                card_ids = self.__difference(card_ids, self.get_trumps(cards))
 
         return card_ids
 
@@ -112,14 +113,12 @@ class State():
 
         card_colors, card_numbers = self.__card_lists(cards)
 
-        if state.game is None or state.game['kind'] == 'sauspiel':
+        if self.game['kind'] is None or self.game['kind'] == 'sauspiel':
             card_ids = [i for i in range(len(cards))
-                if card_colors[i]=='herz'
-                or card_numbers[i] in ['unter', 'ober']]
-        elif state.game['kind'] == 'solo':
+                if card_colors[i]=='herz' or card_numbers[i] in ['unter', 'ober']]
+        elif self.game['kind'] == 'solo':
             card_ids = [i for i in range(len(cards))
-                if card_colors[i]==state.game['color']
-                or card_numbers[i] in ['unter', 'ober']]
+                if card_colors[i]==self.game['color'] or card_numbers[i] in ['unter', 'ober']]
         else:
             card_ids = [i for i in range(len(cards))
                 if card_numbers[i]=='unter']

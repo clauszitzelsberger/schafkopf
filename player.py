@@ -30,7 +30,7 @@ class Player():
         
         # Evaluate if there is already a potential game player
         # and if he/she can be overruled with a higher-order game
-        if state.game is None:
+        if state.game['kind'] is None:
             sauspiel = True
             wenz = True
             solo = True
@@ -46,7 +46,9 @@ class Player():
             for sauspiel in game.sauspiele:
                 if len(state.get_cards(self.cards, color=[sauspiel[0]], 
                                         trumps=False))>0:
-                    self.possible_games.append(sauspiel)
+                    if len(state.get_cards(self.cards, color=[sauspiel[0]],
+                                           number=['sau']))==0:
+                        self.possible_games.append(sauspiel)
         
         if wenz:
             self.possible_games.append(game.wenz)
@@ -155,7 +157,7 @@ class Player():
         # Wenz or Solo
         else:
             # Player is first one to play a card in this trick
-            if state.first_player==self.id:
+            if state.first_player == self.id:
                 self.possible_cards = self.remaining_cards
             else:
                 # Lead card is a trump    
@@ -191,7 +193,7 @@ class Player():
         """Checks selected card and removes card from remaining_cards"""
         assert card in self.possible_cards #not required, because assertion already in schafkopf.py
         
-        if self.davonlaufen_possible and card!=self.rufsau: #TODO: self.rufsau not initialized
+        if self.davonlaufen_possible and card!=self.rufsau:
             self.davongelaufen=True
         
         self.remaining_cards.remove(card)

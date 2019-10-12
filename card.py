@@ -37,7 +37,7 @@ def initialize(id):
     # Display name
     name = (color + ' ' + number)
 
-    # Distinguish betwenn Unter+Ober and rest of cards
+    # Distinguish between Unter+Ober and rest of cards
     if number in ['unter', 'ober']:
         not_ober_unter = False
     else:

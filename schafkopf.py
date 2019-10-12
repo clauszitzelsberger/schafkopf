@@ -5,7 +5,6 @@ import card
 from player import Player
 from general_state import State
 
-
 class Schafkopf():
     def __init__(self):
         self.game_number = 0
@@ -26,6 +25,7 @@ class Schafkopf():
         dealer_id = self.game_number % 4
         
         # Shuffle and deal cards
+        random.seed(1)
         random.shuffle(self.cards)
         for i in range(len(self.players)):
             self.players[i].set_cards(self.cards[i*8:(i+1)*8])
@@ -40,7 +40,16 @@ class Schafkopf():
         """Player plays a card"""
         self.players[player_id].play_card(card)
         self.state.set_card(player_id, card)
-        
+
+    def trick_result(self):
+        """Identifies who gets the trick, updates first player"""
+        first_player = self.state.set_trick_results()
+        return first_player
+
+    def game_result(self):
+        """Count values of cards, identifies the winner(s), updates credit"""
+        pass
+
     @staticmethod    
     def set_order_of_players(first_player):
         """Returns a list of player ids in the correct order"""
@@ -85,4 +94,5 @@ if __name__ == '__main__':
                 schafkopf.step_card(i, sel_card)
              
             # Who gets the trick?   
-            #first_player=
+            first_player = schafkopf.trick_result()
+        schafkopf.game_result()
