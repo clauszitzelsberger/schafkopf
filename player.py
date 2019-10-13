@@ -68,8 +68,10 @@ class Player():
         
         if state.game['kind'] == 'sauspiel':
             
-            rufsau = {'color': state.game.color,
+            rufsau = {'color': state.game['color'],
                       'number': 'sau'}
+
+            has_rufsau = False
             
             # Check if player has rufsau
             ids_list = state.get_cards(self.remaining_cards, 
@@ -83,7 +85,7 @@ class Player():
             # Player is first one to play a card in this trick
             if state.first_player==self.id:
                 
-                assert lead_card==[None, None]
+                assert lead_card is None
                 
                 # Check if player has rufsau
                 if not has_rufsau:
