@@ -5,15 +5,15 @@ import numpy as np
 numbers = ['siebener',
           'achter',
           'neuner',
-          'zehner',
           'unter',
           'ober',
           'koenig',
+          'zehner',
           'sau']
 
-values = [0, 0, 0, 10, 2, 3, 4, 11]
+values = [0, 0, 0, 2, 3, 4, 10, 11]
 
-colors = ['eichel', 'gras', 'herz', 'schellen']
+colors = ['schellen', 'herz', 'gras', 'eichel']
 
 def initialize(id):
     # Id and one hot encoded id
