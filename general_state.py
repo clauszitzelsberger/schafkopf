@@ -4,6 +4,8 @@
 # 2. unique id which is used in card.py
 # TODO: card_ids and card_idx should be used
 
+import numpy as np
+
 import game
 NoneType = type(None)
 max_score = 120
@@ -59,6 +61,30 @@ class State():
 
         return winner_trick
 
+    def set_game_results(self):
+        """
+        Evaluates game, updates credit, identifies winner(s)
+        """
+        opponents = [0, 1, 2, 3]
+        opponents.remove(self.game_player_id)
+
+        if self.game['kind'] == 'sauspiel':
+            team_mate = self.get_team_mate()
+
+    def get_team_mate(self):
+        """
+        Returns team mate player id for sauspiel only
+        """
+        assert self.game['kind'] == 'sauspiel', "No team mate for solo or wenz"
+
+        rufsau = {'color': self.game['color'],
+                  'number': 'sau'}
+
+        # Identify which player played rufsau
+        played_cards = np.array(self.played_cards)
+        played_cards = np.squeeze(played_cards.reshape(32, -1, 2), axis=1)
+        return played_cards.tolist().index(rufsau)%4
+
 
     def update_scores(self, additional_scores=[0, 0, 0, 0]):
         """Update scores of each player"""
@@ -66,7 +92,6 @@ class State():
         assert isinstance(additional_scores, list)
         self.scores += additional_scores
         assert sum(self.scores)<=max_score
-
 
     def get_cards(self, cards, color=None, number=None, trumps=None):
         """Returns subset of cards based on given criteria

@@ -5,6 +5,8 @@ import card
 from player import Player
 from general_state import State
 
+random_playing = True
+
 class Schafkopf():
     def __init__(self):
         self.game_number = 0
@@ -47,8 +49,8 @@ class Schafkopf():
         return first_player
 
     def game_result(self):
-        """Count values of cards, identifies the winner(s), updates credit"""
-        pass
+        """Identifies the winner(s), updates credit"""
+        self.state.set_game_results()
 
     @staticmethod    
     def set_order_of_players(first_player):
@@ -73,11 +75,12 @@ if __name__ == '__main__':
             print([card['name'] for card in schafkopf.players[i].cards])
             print(poss_games)
             if len(poss_games)>0:
-                sel_game_color = 'schellen'#input('Select game color: ')
-                sel_game_type = 'solo'#input('Select game type: ')
+                sel_game_color = input('Select game color: ')
+                sel_game_type = input('Select game type: ')
                 sel_game = [None if sel_game_color=='None' else sel_game_color, 
                             None if sel_game_type=='None' else sel_game_type]
-                schafkopf.step_game(i, sel_game)
+                if sel_game != [None, None]:
+                    schafkopf.step_game(i, sel_game)
             print('\n')
         
         # Iterate over 8 tricks
@@ -88,7 +91,11 @@ if __name__ == '__main__':
             for i in players_order:
                 poss_cards = schafkopf.players[i].get_possible_cards(schafkopf.state)
                 print(poss_cards)
-                sel_card_id = int(input('Select card id: '))
+                if random_playing:
+                    poss_card_ids = [poss_card['id'] for poss_card in poss_cards]
+                    sel_card_id = random.choice(poss_card_ids)
+                else:
+                    sel_card_id = int(input('Select card id: '))
                 sel_card = next((card for card in poss_cards if card['id'] == sel_card_id), None)
                 assert sel_card is not None, 'Selected card not part of possbile cards list'
                 schafkopf.step_card(i, sel_card)
