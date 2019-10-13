@@ -174,7 +174,7 @@ class Player():
                         
                 # Lead card is a color
                 else:
-                    ids_list = state.get_cards(self.remaining_cards, color=[lead_card['color']])
+                    ids_list = state.get_cards(self.remaining_cards, color=[lead_card['color']], trumps=False)
                     
                     # Player has lead cards color
                     if len(ids_list)>0:
