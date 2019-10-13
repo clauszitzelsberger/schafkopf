@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+# Note: There are two different meaning of card_ids
+# 1. index in a list of cards
+# 2. unique id which is used in card.py
+# TODO: card_ids and card_idx should be used
 
 import game
 NoneType = type(None)
@@ -41,29 +45,19 @@ class State():
     def set_trick_results(self):
         """Returns winner of trick and updates first_player, scores and trick"""
 
-        def highest_ober_or_unter(number='ober'):
-            """Returns winner of trick """
-            card_ids = self.get_cards(player_cards, number)
-            if len(card_ids):
-                cards = [player_cards[i] for i in ober_ids]
+        highest_card = self.get_highest_card()
+        winner_trick = highest_card
 
-                # id < 8 => eicherl, id < 16 => gras, etc...
-                return cards.index(min([i['id'] for i in cards]))
+        self.first_player = winner_trick
 
-        player_cards = self.played_cards[self.trick]
-        trump_ids = self.get_trumps(player_cards)
+        # Update scores
+        additional_scores = [0, 0, 0, 0]
+        additional_scores[winner_trick] = sum([card['value'] for card in self.played_cards[self.trick]])
+        self.update_scores(additional_scores)
 
-        if len(trump_ids) > 0:
+        self.trick += 1
 
-            if self.game['kind'] != 'wenz':
-                pass
-
-
-
-            ober_ids = self.get_cards(player_cards, number='ober')
-            if len(ober_ids) > 0:
-                ober = [player_cards[i] for i in ober_ids]
-                winner_trick = ober.index(min([i['id'] for i in ober]))
+        return winner_trick
 
 
     def update_scores(self, additional_scores=[0, 0, 0, 0]):
@@ -124,6 +118,43 @@ class State():
                 if card_numbers[i]=='unter']
         return card_ids
 
+    def get_highest_card(self):
+        """Returns highest card id, player who got the trick resp"""
+
+        def get_highest_card_of_a_kind(cards):
+            """Returns card with the highest id which is the highest card if a list of
+            - obers and unters (for sauspiel and solo)
+            - unters (for wenz)
+            - cards with one color only
+            is provided
+            """
+            card_ids = [card['id'] for card in cards]
+            return card_ids.index(max(card_ids))
+
+        played_cards = self.played_cards[self.trick]
+        lead_card = played_cards[self.first_player]
+
+        # If no trumps in played cards, highest card with color of lead card wins
+        trump_ids = self.get_trumps(played_cards)
+        if len(trump_ids) == 0:
+            lead_card_color_card_ids = self.get_cards(played_cards, color=[lead_card['color']])
+            lead_card_color_cards = self.__card_ids_to_card_objs(lead_card_color_card_ids, played_cards)
+            highest_card_id = get_highest_card_of_a_kind(lead_card_color_cards)
+        else:
+            # If there are trumps in played cards, distinguish if there are also obers and unters
+            trumps = self.__card_ids_to_card_objs(trump_ids, played_cards)
+            ober_unter_ids = self.get_cards(trumps, number=['unter', 'ober'])
+            obers_unters = self.__card_ids_to_card_objs(ober_unter_ids, played_cards)
+
+            # If there are no obers and unters in played cards
+            if len(ober_unter_ids) == 0:
+                highest_card_id = get_highest_card_of_a_kind(trumps)
+            else:
+                highest_card_id = get_highest_card_of_a_kind(obers_unters)
+
+        return highest_card_id
+
+
     @staticmethod
     def __card_lists(cards):
         """Returns two lists, one for color, one for number given a cards list"""
@@ -138,6 +169,12 @@ class State():
     def __difference(lst1, lst2):
         """Returns theoretic difference of lst1 and lst2 (lst1 \ lst2)"""
         return [i for i in lst1 if i not in lst2]
+
+    @staticmethod
+    def __card_ids_to_card_objs(card_ids, cards):
+        assert isinstance(card_ids, list)
+        assert isinstance(cards, list)
+        return [cards[i] for i in card_ids]
 
 if __name__ == '__main__':
     state = State(1)
