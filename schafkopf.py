@@ -43,11 +43,11 @@ class Schafkopf():
             self.api_dict['Possibilities'].extend([None])
 
         elif self.api_dict['Selection'] == 'Card':
+            self.api_dict['Cards'] = [card['name'] for card in self.players[current_player_id].cards]
             self.api_dict['Possibilities'] = \
                 self.players[current_player_id].get_possible_cards(schafkopf.state)
 
         self.api_print()
-
 
 
     def api_set(self, selection):
@@ -62,9 +62,16 @@ class Schafkopf():
             if selection is not None:
                 self.step_game(self.api_dict['Player'], selection)
             self.player_idx += 1
+            # After all players performed game selection process
+            # check if one player wants to play a game, then card
+            # selection process will be performed
+            # otherwise there will be a new round (reset)
             if self.player_idx == 4:
-                self.player_idx = 0
-                self.api_dict['Selection'] == 'Card'
+                if self.state.game['kind'] is None:
+                    self.reset()
+                else:
+                    self.player_idx = 0
+                    self.api_dict['Selection'] = 'Card'
 
         elif self.api_dict['Selection'] == 'Card':
             selection = next((card for card in self.api_dict['Possibilities'] if card['name'] == selection), None)
@@ -76,9 +83,12 @@ class Schafkopf():
         order = ['Player', 'Cards', 'Selection', 'Possibilities']
         for _, item in enumerate(order):
             if item in self.api_dict:
-                if item == order[3]:
+                if item == 'Possibilities':
                     for j, possibility in enumerate(self.api_dict[item]):
-                        print(f'{j}: {possibility}')
+                        if self.api_dict['Selection'] == 'Card':
+                            print(f"{j}: {possibility['name']}")
+                        else:
+                            print(f'{j}: {possibility}')
                 else:
                     print(f'{item}: {self.api_dict[item]}')
 
